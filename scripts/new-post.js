@@ -12,6 +12,24 @@ function getDate() {
 	return `${year}-${month}-${day}`;
 }
 
+function getDatetime() {
+  const date = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+
+  // 获取 UTC 时间，再手动加上目标时区偏移
+  const offsetMinutes = 8 * 60; // +08:00
+  const local = new Date(date.getTime() + offsetMinutes * 60 * 1000);
+
+  const year = local.getUTCFullYear();
+  const month = pad(local.getUTCMonth() + 1);
+  const day = pad(local.getUTCDate());
+  const hour = pad(local.getUTCHours());
+  const minute = pad(local.getUTCMinutes());
+  const second = pad(local.getUTCSeconds());
+
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}+08:00`;
+}
+
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
@@ -45,6 +63,7 @@ if (!fs.existsSync(dirPath)) {
 const content = `---
 title: ${args[0]}
 published: ${getDate()}
+publishedAt: ${getDatetime()}
 description: ''
 image: ''
 tags: []
